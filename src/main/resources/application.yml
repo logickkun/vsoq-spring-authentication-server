@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: spring-authentication-server
+
+  web:
+    resources:
+      static-locations:
+        - file:C:/video-streaming-over-quic/vsoq.react.auth/
+
