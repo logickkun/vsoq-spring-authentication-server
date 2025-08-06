@@ -7,3 +7,19 @@ spring:
       static-locations:
         - file:C:/video-streaming-over-quic/vsoq.react.auth/
 
+server:
+  port: 8081
+
+logging:
+  level:
+    # Gateway core
+    org.springframework.cloud.gateway: DEBUG
+    # Reactor Netty HTTP 서버/클라이언트 (실제 네트워크 레벨)
+    reactor.netty.http.server: DEBUG
+    reactor.netty.http.client: DEBUG
+    # Spring WebFlux 핸들러
+    org.springframework.web: DEBUG
+    # Security 처리
+    org.springframework.security: DEBUG
+    # (Optional) 전체 로그 TRACE
+    # ROOT: DEBUG
