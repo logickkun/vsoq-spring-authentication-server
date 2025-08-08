@@ -11,23 +11,25 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class AuthNSecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain authSecurityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(CsrfConfigurer::disable)
                 .httpBasic(HttpBasicConfigurer::disable)
                 .formLogin(FormLoginConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        // 2-1) SPA 진입점 & 정적 리소스는 모두 허용
                         .requestMatchers(
-                                "/",
+                                // 미인증 로그인 관련 주소
                                 "/login",
+                                "/auth/login",
+
+                                // Static resources
                                 "/index.html",
-                                "/favicon.ico",
                                 "/vite.svg",
-                                "/assets/**"
+                                "/assets/**",
+                                "/favicon.ico"
                         ).permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .anyRequest().denyAll()
