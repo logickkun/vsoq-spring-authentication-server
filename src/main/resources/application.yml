@@ -22,6 +22,16 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
+
+app:
+  role:
+    prefixes:
+      - ROLE
+      - OBA
+      - DMC
+      - POT   # 새 모듈 추가 시 여기만 수정
+
+
 server:
   port: 8081
 
