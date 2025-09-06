@@ -32,6 +32,11 @@ app:
       - POT   # 새 모듈 추가 시 여기만 수정
 
 
+
+
+authz:
+  internal-key: ${AUTHZ_INTERNAL_KEY_WEB:local-dev-key}  # AuthZ와 동일 키
+
 server:
   port: 8081
 
