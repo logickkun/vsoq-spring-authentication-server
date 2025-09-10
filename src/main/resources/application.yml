@@ -7,12 +7,14 @@ spring:
       static-locations:
         - file:C:/video-streaming-over-quic/vsoq.react.auth/
 
+  # User DB Settings
   datasource:
     url: jdbc:postgresql://localhost:5432/authdb
     username: choi
     password: root
     driver-class-name: org.postgresql.Driver
 
+  # JPA Settings
   jpa:
     hibernate:
       ddl-auto: update     # 개발 중엔 update, 운영 시엔 validate 권장
@@ -23,33 +25,28 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 
-app:
-  role:
-    prefixes:
-      - ROLE
-      - OBA
-      - DMC
-      - POT   # 새 모듈 추가 시 여기만 수정
+  # Authorization Server Endpoint Settings
+  security:
+    oauth2:
+      authorizationserver:
+        issuer: http://localhost:9000
+        endpoint:
+          authorization-uri: /oauth2/authorize
+          token-uri: /oauth2/token
+          token-revocation-uri: /oauth2/revoke
+          jwk-set-uri: /oauth2/jwks
+          oidc:
+            client-registration-uri: /connect/register
+            userinfo-uri: /connect/userinfo
+            logout-uri: /connect/logout
+#          token-introspection-uri: /oauth2/introspect
 
 
-
-
-authz:
-  internal-key: ${AUTHZ_INTERNAL_KEY_WEB:local-dev-key}  # AuthZ와 동일 키
-
+# Authentication Server Basic port
 server:
-  port: 8081
+  port: 9000
 
 logging:
   level:
-    # Gateway core
-    org.springframework.cloud.gateway: DEBUG
-    # Reactor Netty HTTP 서버/클라이언트 (실제 네트워크 레벨)
-    reactor.netty.http.server: DEBUG
-    reactor.netty.http.client: DEBUG
-    # Spring WebFlux 핸들러
-    org.springframework.web: DEBUG
-    # Security 처리
-    org.springframework.security: DEBUG
-    # (Optional) 전체 로그 TRACE
-    # ROOT: DEBUG
+    org.springframework.security.oauth2.server.authorization: DEBUG
+    org.springframework.security.web: DEBUG
