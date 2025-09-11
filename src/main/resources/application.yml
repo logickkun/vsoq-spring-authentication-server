@@ -9,7 +9,7 @@ spring:
 
   # User DB Settings
   datasource:
-    url: jdbc:postgresql://localhost:5432/authdb
+    url: jdbc:postgresql://localhost:5432/quicdb
     username: choi
     password: root
     driver-class-name: org.postgresql.Driver
@@ -40,6 +40,11 @@ spring:
             userinfo-uri: /connect/userinfo
             logout-uri: /connect/logout
 #          token-introspection-uri: /oauth2/introspect
+
+bff:
+  oauth:
+    web:
+      redirect-uri: "http://localhost:8080/bff/web/callback"
 
 
 # Authentication Server Basic port
