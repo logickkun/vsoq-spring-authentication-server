@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -31,22 +32,21 @@ public class AuthNServerConfig {
     @Value("${bff.oauth.web.redirect-uri}")
     private String redirectUri;
 
-    // --- Registered Client (BFF, PKCE public) -------------------------------
+    // --- Registered Client (BFF, Confidential + PKCE) -------------------------------
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
-        RegisteredClient registration = RegisteredClient.withId(UUID.randomUUID().toString())
+        RegisteredClient rc = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("vsoq-bff-web-client")
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .clientSecret(passwordEncoder().encode("vsoq-bff-web-secret"))  // 저장은 인코딩
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST) // ★ POST 방식 허용
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri(redirectUri) // 게이트웨이 기준 콜백
-                .postLogoutRedirectUri("http://localhost:8080/")
+                .redirectUri("http://localhost:8080/bff/web/callback")
                 .scope(OidcScopes.OPENID)
                 .scope(OidcScopes.PROFILE)
-                .scope(OidcScopes.EMAIL)
                 .clientSettings(ClientSettings.builder()
-                        .requireProofKey(true)               // PKCE 필수
-                        .requireAuthorizationConsent(false)  // 동의 화면 생략
+                        .requireProofKey(true)
+                        .requireAuthorizationConsent(false)
                         .build())
                 .tokenSettings(TokenSettings.builder()
                         .accessTokenTimeToLive(Duration.ofMinutes(30))
@@ -54,7 +54,8 @@ public class AuthNServerConfig {
                         .reuseRefreshTokens(true)
                         .build())
                 .build();
-        return new InMemoryRegisteredClientRepository(registration);
+
+        return new InMemoryRegisteredClientRepository(rc);
     }
 
     // --- JWK Source
@@ -71,7 +72,9 @@ public class AuthNServerConfig {
 
     // --- Password Encoder
     @Bean
-    public PasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
+    public PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 
     // --- Authentication Provider
     @Bean
