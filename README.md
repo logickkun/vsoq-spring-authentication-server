@@ -1,4 +1,4 @@
-<h3>🔐 OAuth 2.0 / OIDC 권장 흐름 요약</h3>
+<h3> OAuth 2.0 / OIDC 권장 흐름 요약</h3>
 <p>
   <kbd>Client ➜ Authorization Server(AS/OP) ➜ 로그인/SSO</kbd><br>
   <kbd>AS가 사용자 인증 &amp; 인가 확인</kbd><br>
