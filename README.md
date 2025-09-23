@@ -1,3 +1,10 @@
+<h3> BFF Architecture </h3>
+
+
+<img width="800" height="705" alt="image" src="https://github.com/user-attachments/assets/f7ef7dfd-8b38-40c5-a07a-2e28b468674b" />
+
+
+
 <h3> OAuth 2.0 / OIDC 권장 흐름 요약</h3>
 <p>
   <kbd>Client ➜ Authorization Server(AS/OP) ➜ 로그인/SSO</kbd><br>
